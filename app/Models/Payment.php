@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'policy_id',
@@ -24,9 +26,10 @@ class Payment extends Model
     protected function casts(): array
     {
         return [
-            'amount' => 'decimal:2',
+            'amount'           => 'decimal:2',
             'gateway_response' => 'array',
-            'paid_at' => 'datetime',
+            'paid_at'          => 'datetime',
+            'status'           => PaymentStatus::class,
         ];
     }
 

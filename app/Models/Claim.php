@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\ClaimStatus;
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Claim extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, Auditable;
 
     protected $fillable = [
         'policy_id',
@@ -25,9 +29,10 @@ class Claim extends Model
     protected function casts(): array
     {
         return [
-            'incident_date' => 'date',
-            'amount_claimed' => 'decimal:2',
+            'incident_date'   => 'date',
+            'amount_claimed'  => 'decimal:2',
             'amount_approved' => 'decimal:2',
+            'status'          => ClaimStatus::class,
         ];
     }
 
@@ -39,5 +44,10 @@ class Claim extends Model
     public function traveler(): BelongsTo
     {
         return $this->belongsTo(Traveler::class);
+    }
+
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'documentable');
     }
 }

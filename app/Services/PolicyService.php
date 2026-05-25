@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\PolicyPaymentStatus;
+use App\Enums\PolicyStatus;
 use App\Models\Plan;
 use App\Models\Policy;
 use App\Models\Traveler;
@@ -22,8 +24,8 @@ class PolicyService
                 'policy_number' => $this->nextPolicyNumber(),
                 'tax_amount' => $taxAmount,
                 'total_amount' => round($data['premium_amount'] + $taxAmount, 2),
-                'status' => 'pending_payment',
-                'payment_status' => 'pending',
+                'status'         => PolicyStatus::PendingPayment,
+                'payment_status' => PolicyPaymentStatus::Pending,
             ]);
 
             $travelers = Traveler::whereIn('id', $data['traveler_ids'])->get();
